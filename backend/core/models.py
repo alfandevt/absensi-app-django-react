@@ -3,6 +3,7 @@ Database models.
 """
 # import uuid
 import os
+import uuid
 from datetime import (
     datetime, time
 )
@@ -20,11 +21,35 @@ def default_time(hour=9, minute=0, second=0):
     """Create default time for timeField"""
     return time(hour, minute, second)
 
-def profil_foto_file_path(instance, filename):
+def user_foto_file_path(instance, filename):
     """Generate file path for foto"""
     ext = os.path.splitext(filename)[1]
-    filename = f'{instance.nama_lengkap}{ext}'
-    return os.path.join('uploads', 'profil', filename)
+    filename = f'{uuid.uuid4()}{ext}'
+    return os.path.join('uploads', 'user', filename)
+
+
+class Profil(models.Model):
+    """Profil model for user."""
+
+    class JenisKelamin(models.TextChoices):
+        LAKI = 'L', _('Laki-laki')
+        PEREMPUAN = 'P', _('Perempuan')
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='profil'
+    )
+    nik = models.CharField(max_length=30, null=True)
+    no_telp = models.CharField(null=True, max_length=30)
+    tgl_lahir = models.DateField(null=True)
+    jenis_kelamin = models.TextField(
+        choices=JenisKelamin.choices,
+        null=True)
+    divisi = models.ForeignKey('Divisi', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.user.nama_lengkap
 
 
 class UserManager(BaseUserManager):
@@ -61,37 +86,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    foto = models.ImageField(null=True, upload_to=user_foto_file_path)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
 
-
-class ProfilKaryawan(models.Model):
-    """Profil model for user."""
-
-    class JenisKelamin(models.TextChoices):
-        LAKI = 'L', _('Laki-laki')
-        PEREMPUAN = 'P', _('Perempuan')
-
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
-    nik = models.CharField(max_length=30)
-    no_telp = models.CharField(null=True, max_length=30)
-    tgl_lahir = models.DateField()
-    jenis_kelamin = models.TextField(
-        choices=JenisKelamin.choices,
-        default=JenisKelamin.LAKI)
-    foto = models.ImageField(null=True)
-    divisi = models.ForeignKey('DivisiKerja', on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return self.user.nama_lengkap
+    REQUIRED_FIELDS = ['nama_lengkap']
 
 
-class DivisiKerja(models.Model):
+class Divisi(models.Model):
     """Model for Divisi Kerja."""
     nama = models.CharField(max_length=255)
 
@@ -106,14 +110,9 @@ class JamKerja(models.Model):
     deskripsi = models.CharField(max_length=200)
 
 
-class JamKerjaAktif(models.Model):
-    """Model for set jam kerja aktif."""
-    jam_kerja = models.OneToOneField('JamKerja', on_delete=models.SET_NULL, null=True)
-
-
 class AbsensiKaryawan(models.Model):
     """Model for absensi karyawan."""
-    karyawan = models.ForeignKey('ProfilKaryawan', on_delete=models.CASCADE)
+    karyawan = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     keterangan = models.CharField(max_length=255)
     jam = models.DateTimeField(auto_now_add=True)
 

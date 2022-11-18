@@ -38,8 +38,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
-admin.site.register(models.ProfilKaryawan)
-admin.site.register(models.DivisiKerja)
+admin.site.register(models.Profil)
+admin.site.register(models.Divisi)
 admin.site.register(models.JamKerja)
-admin.site.register(models.JamKerjaAktif)
 admin.site.register(models.AbsensiKaryawan)
