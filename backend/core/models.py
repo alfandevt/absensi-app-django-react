@@ -79,7 +79,6 @@ class UserManager(BaseUserManager):
         return user
 
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     """User model for system."""
     nama_lengkap = models.CharField(max_length=255)
@@ -110,10 +109,8 @@ class JamKerja(models.Model):
     deskripsi = models.CharField(max_length=200)
 
 
-class AbsensiKaryawan(models.Model):
+class Absensi(models.Model):
     """Model for absensi karyawan."""
-    karyawan = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     keterangan = models.CharField(max_length=255)
     jam = models.DateTimeField(auto_now_add=True)
-
-

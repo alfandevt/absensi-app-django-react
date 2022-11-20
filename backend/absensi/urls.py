@@ -11,8 +11,9 @@ from absensi import views
 app_name = 'absensi'
 
 router = DefaultRouter()
-router.register('jamkerja', views.ManageJamKerjaViewSet)
+router.register('setting/jam', views.ManageJamKerjaViewSet)
+router.register('absen', views.AbsenKerjaViewSet)
 
 urlpatterns = [
-    path('manage/', include(router.urls))
+    path('manage/', include(router.urls)),
 ]

@@ -140,7 +140,7 @@ class ModelTests(TestCase):
         mulai = time(hour=9)
         selesai = time(hour=11)
         jam_kerja = models.JamKerja.objects.create(mulai=mulai, selesai=selesai, deskripsi='Kerja Reguler')
-        absensi = models.AbsensiKaryawan(karyawan=user, keterangan='Terlambat', jam=time(10))
+        absensi = models.Absensi(user=user, keterangan='Terlambat', jam=time(10))
 
         self.assertGreater(absensi.jam, jam_kerja.mulai)
 

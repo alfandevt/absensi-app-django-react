@@ -12,6 +12,15 @@ from rest_framework import serializers
 from core import models
 
 
+class DivisiSerializer(serializers.ModelSerializer):
+    """Serializer for divisi."""
+
+    class Meta:
+        model = models.Divisi
+        fields = ['id', 'nama']
+        read_only_fields = ['']
+
+
 class ProfilSerializer(serializers.ModelSerializer):
     """Serializer for Profil"""
 

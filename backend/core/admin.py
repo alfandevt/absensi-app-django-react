@@ -41,4 +41,4 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(models.Profil)
 admin.site.register(models.Divisi)
 admin.site.register(models.JamKerja)
-admin.site.register(models.AbsensiKaryawan)
+admin.site.register(models.Absensi)
