@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Button,
   Card,
@@ -7,15 +8,23 @@ import {
   Form,
   Image,
 } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/LoginPage.css";
+import { login } from "../actions/userActions";
+import { swalAlert } from "../utilities/sweetAlert";
 
 function LoginPage() {
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const onSubmit = (event) => {
     event.preventDefault();
-    navigate("/");
+    if (!email || !password) {
+      swalAlert("Isi email atau password dengan lengkap.", { icon: "error" });
+    } else {
+      dispatch(login(email, password));
+    }
   };
 
   return (
@@ -28,32 +37,34 @@ function LoginPage() {
         <Card.Body>
           <Form className="mb-3" onSubmit={onSubmit}>
             <FloatingLabel
-              controlId="usernameControl"
-              label="username"
+              controlId="emailControl"
+              label="email"
               className="mb-3"
             >
-              <Form.Control type="text" placeholder="username" />
+              <Form.Control
+                type="text"
+                placeholder="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+              />
             </FloatingLabel>
             <FloatingLabel
               controlId="passwordControl"
               label="password"
               className="mb-3"
             >
-              <Form.Control type="password" placeholder="password" />
+              <Form.Control
+                type="password"
+                placeholder="password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+              />
             </FloatingLabel>
-            <Form.Check
-              type="switch"
-              id="remember"
-              label="Remember me"
-              className="mb-3"
-            />
+
             <Button type="submit" className="w-100">
               Login
             </Button>
           </Form>
-          <Card.Text>
-            <Link to="/lupa">Lupa Password?</Link>
-          </Card.Text>
         </Card.Body>
       </Card>
     </Container>

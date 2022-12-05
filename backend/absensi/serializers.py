@@ -18,16 +18,14 @@ class JamKerjaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.JamKerja
-        fields =['mulai', 'selesai', 'deskripsi']
+        fields =['id', 'mulai', 'selesai', 'deskripsi']
         read_only_fields = ['id']
 
 
 class AbsensiSerializer(serializers.ModelSerializer):
     """Serializer for absensi."""
 
-    user = UserSerializer(get_user_model(), required=False)
-
     class Meta:
         model = models.Absensi
-        fields = ['user', 'keterangan', 'jam']
+        fields = ['id', 'keterangan', 'jam']
         read_only_fields = ['id', 'jam']

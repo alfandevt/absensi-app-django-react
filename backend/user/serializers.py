@@ -18,7 +18,7 @@ class DivisiSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Divisi
         fields = ['id', 'nama']
-        read_only_fields = ['']
+        read_only_fields = ['id']
 
 
 class ProfilSerializer(serializers.ModelSerializer):
@@ -30,6 +30,10 @@ class ProfilSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+class ProfilAbsensiSerializer(ProfilSerializer):
+    divisi = DivisiSerializer(required=False)
+
+
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for user object."""
 
@@ -37,9 +41,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['id', 'nama_lengkap', 'email', 'password', 'foto', 'profil']
-        read_only_fields = ['id', 'is_active']
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+        fields = ['id', 'nama_lengkap', 'email', 'password', 'foto', 'profil', 'is_staff', 'is_active']
+        read_only_fields = ['id', 'is_active', 'is_staff']
+        extra_kwargs = {
+            'password': {'write_only': True, 'min_length': 5, 'required': False},
+            'email': {'required': False}
+        }
 
 
     def create(self, validated_data):
@@ -69,6 +76,10 @@ class UserSerializer(serializers.ModelSerializer):
             userProfil.update(**profil)
 
         return user
+
+
+class AbsensiUserSerializer(UserSerializer):
+    profil = ProfilAbsensiSerializer(required=False)
 
 
 class AuthTokenSerializer(serializers.Serializer):

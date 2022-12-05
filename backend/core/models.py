@@ -11,6 +11,7 @@ from datetime import (
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -108,9 +109,18 @@ class JamKerja(models.Model):
     selesai = models.TimeField()
     deskripsi = models.CharField(max_length=200)
 
+    def __str__(self) -> str:
+        return self.deskripsi
+
 
 class Absensi(models.Model):
     """Model for absensi karyawan."""
+    class KeteranganAbsen(models.TextChoices):
+        MASUK = 'M', _('Masuk')
+        PULANG = 'P', _('Pulang')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    keterangan = models.CharField(max_length=255)
-    jam = models.DateTimeField(auto_now_add=True)
+    keterangan = models.CharField(max_length=255, choices=KeteranganAbsen.choices, null=True)
+    jam = models.DateTimeField(default=timezone.now, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.user} - {self.keterangan}'

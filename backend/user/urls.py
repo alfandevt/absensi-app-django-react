@@ -11,6 +11,7 @@ app_name = 'user'
 
 router = DefaultRouter()
 router.register('users', views.ManageUsersViewSet)
+router.register('divisi', views.ManageDivisiViewSet)
 
 urlpatterns = [
     path('token/', views.CreateTokenView.as_view(), name='token'),

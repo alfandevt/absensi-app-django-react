@@ -1,95 +1,138 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal, Button, Form, Container } from "react-bootstrap";
 import {
-  Modal,
-  Button,
-  Form,
-  Container,
-  Row,
-  Col,
-  Image,
-} from "react-bootstrap";
+  emailValidator,
+  numberOnlyValidator,
+} from "../../../utilities/fieldValidator";
+import { swalAlert } from "../../../utilities/sweetAlert";
 import Portal from "../../Portal";
 
-function AddUserForm({ show, onHandleHide }) {
+function AddUserForm({ show, onHandleHide, onSave }) {
+  const [nomorInduk, setNomorInduk] = useState("");
+  const [namaLengkap, setNamaLengkap] = useState("");
+  const [email, setEmail] = useState("");
+  const [jenisKelamin, setJenisKelamin] = useState("");
+  const [noTelp, setNoTelp] = useState("");
+
+  const clearForm = () => {
+    setNamaLengkap("");
+    setJenisKelamin("");
+    setNomorInduk("");
+    setEmail("");
+    setNoTelp("");
+  };
+
+  const handleHide = () => {
+    clearForm();
+    onHandleHide();
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {};
+    const profilData = {};
+
+    if (nomorInduk) {
+      profilData.nik = nomorInduk;
+    }
+
+    if (namaLengkap) {
+      formData.nama_lengkap = namaLengkap;
+    }
+
+    if (email) {
+      formData.email = email;
+    }
+
+    if (jenisKelamin) {
+      profilData.jenis_kelamin = jenisKelamin;
+    }
+
+    if (noTelp) {
+      profilData.no_telp = noTelp;
+    }
+
+    if (!profilData.nik) {
+      swalAlert("NIK wajib diisi.", { icon: "error" });
+    } else if (!numberOnlyValidator(profilData.nik)) {
+      swalAlert("NIK hanya menerima angka.", { icon: "error" });
+    } else if (!formData.nama_lengkap) {
+      swalAlert("Nama Lengkap wajib diisi.", { icon: "error" });
+    } else if (!formData.email) {
+      swalAlert("Email wajib diisi.", { icon: "error" });
+    } else if (!emailValidator(formData.email)) {
+      swalAlert("Format email tidak sesuai", { icon: "error" });
+    } else {
+      formData.password = nomorInduk;
+      formData.profil = profilData;
+      onSave(formData);
+      handleHide();
+    }
+  };
   return (
     <Portal wrapperId="portal-modals">
-      <Modal show={show} onHide={onHandleHide}>
+      <Modal show={show} onHide={handleHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Tambah User</Modal.Title>
+          <Modal.Title>Tambah Akun</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Container>
               <Form.Group className="mb-2">
-                <Form.Label>ID Karyawan</Form.Label>
-                <Form.Control placeholder="id karyawan" />
+                <Form.Label>NIK*</Form.Label>
+                <Form.Control
+                  placeholder="NIK"
+                  onChange={(e) => setNomorInduk(e.target.value)}
+                  value={nomorInduk}
+                  type="tel"
+                  maxLength="30"
+                />
               </Form.Group>
-              <Row className="mb-2">
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Nama Depan</Form.Label>
-                    <Form.Control placeholder="nama depan" />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Nama Belakang</Form.Label>
-                    <Form.Control placeholder="nama depan" />
-                  </Form.Group>
-                </Col>
-              </Row>
+              <Form.Group>
+                <Form.Label>Nama Lengkap*</Form.Label>
+                <Form.Control
+                  placeholder="nama depan"
+                  onChange={(e) => setNamaLengkap(e.target.value)}
+                  value={namaLengkap}
+                />
+              </Form.Group>
               <Form.Group className="mb-2">
-                <Form.Label>Tgl. Lahir</Form.Label>
-                <Form.Control placeholder="nama depan" type="date" />
+                <Form.Label>Email*</Form.Label>
+                <Form.Control
+                  placeholder="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>Jenis Kelamin</Form.Label>
-                <Form.Select>
+                <Form.Select
+                  onChange={(e) => setJenisKelamin(e.target.value)}
+                  value={jenisKelamin}
+                >
                   <option>Pilih</option>
-                  <option value="l">Laki-laki</option>
-                  <option value="p">Perempuan</option>
+                  <option value="L">Laki-laki</option>
+                  <option value="P">Perempuan</option>
                 </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Alamat</Form.Label>
-                <Form.Control placeholder="alamat" />
               </Form.Group>
               <Form.Group className="mb-2">
                 <Form.Label>No. Telp</Form.Label>
-                <Form.Control placeholder="no. telp" />
+                <Form.Control
+                  placeholder="no. telp"
+                  onChange={(e) => setNoTelp(e.target.value)}
+                  value={noTelp}
+                />
               </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Email</Form.Label>
-                <Form.Control placeholder="email" />
-              </Form.Group>
-              <Form.Group className="mb-2">
-                <Form.Label>Status Karyawan</Form.Label>
-                <Form.Select>
-                  <option>Pilih</option>
-                  <option value="a">Aktif</option>
-                  <option value="t">Tidak Aktif</option>
-                </Form.Select>
-              </Form.Group>
-              <Row>
-                <Col xs={6}>
-                  <Form.Group className="mb-2">
-                    <Form.Label>Foto</Form.Label>
-                    <Form.Control type="file" placeholder="email" />
-                  </Form.Group>
-                </Col>
-                <Col xs={6}>
-                  <Image width={120} height={120} src="/images/placeholder/Portrait_Placeholder.png" />
-                </Col>
-              </Row>
+              <Form.Text className="fs-8">*Wajib diisi</Form.Text>
             </Container>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHandleHide}>
-            Close
+          <Button variant="secondary" onClick={handleHide}>
+            Tutup
           </Button>
-          <Button variant="primary" onClick={onHandleHide}>
-            Save Changes
+          <Button variant="primary" onClick={handleSubmit}>
+            Simpan
           </Button>
         </Modal.Footer>
       </Modal>

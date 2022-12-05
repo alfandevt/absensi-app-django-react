@@ -29,6 +29,12 @@ def create_superuser(nama_lengkap='Testo User', email='test@email.com', password
     user.refresh_from_db()
     return user
 
+def create_user(nama_lengkap='Testo Userso', email='testo@email.com', password='testpass123'):
+    """Create and return user."""
+    user = get_user_model().objects.create_user(email, password, nama_lengkap)
+    user.refresh_from_db()
+    return user
+
 
 class PublicUserApiTests(TestCase):
     """Test for unauthorized feature of Apis."""
@@ -101,10 +107,11 @@ class AdminUserApiTests(TestCase):
 
     def test_retrieve_user(self):
         """Retrieve an user."""
-        res = self.client.get(detail_urls(self.user.id))
+        user = create_user()
+        res = self.client.get(detail_urls(user.id))
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.user.email, res.data['email'])
+        self.assertEqual(user.email, res.data['email'])
 
     def test_retrieve_user_404(self):
         """Retrieve an user."""
@@ -114,13 +121,14 @@ class AdminUserApiTests(TestCase):
 
     def test_edit_user(self):
         """Edit a user test."""
+        user = create_user()
         payload = {'nama_lengkap': 'Antonov'}
-        url = detail_urls(self.user.id)
+        url = detail_urls(user.id)
         res = self.client.patch(url, payload)
 
-        self.user.refresh_from_db()
+        user.refresh_from_db()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.user.nama_lengkap, res.data['nama_lengkap'])
+        self.assertEqual(user.nama_lengkap, res.data['nama_lengkap'])
 
     def test_edit_user_detil(self):
         """Edit a user detil."""
