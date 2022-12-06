@@ -32,57 +32,13 @@ function Sidebar() {
         <span className="fs-4">Absensi Online</span>
       </Link>
       <hr />
-      <Nav variant="pills" className="flex-column mb-auto">
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.BASE}>
-            <Nav.Link>Beranda</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.ABSENKU_URL}>
-            <Nav.Link>AbsenKu</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-        <Nav.Item>
-          <hr />
-        </Nav.Item>
-        <Nav.Item>
-          <p>Menu Admin</p>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href={APP_URLS.ADMIN_URL} target="_blank" rel="noreferrer">
-            Dashboard Administrasi
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.DATA_ABSENSI}>
-            <Nav.Link>Absensi</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.DATA_USER}>
-            <Nav.Link>Karyawan</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.DATA_DIVISI}>
-            <Nav.Link>Divisi</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-        <Nav.Item>
-          <LinkContainer to={APP_URLS.SETTING}>
-            <Nav.Link>Setting</Nav.Link>
-          </LinkContainer>
-        </Nav.Item>
-      </Nav>
-      <hr />
       <Dropdown>
         <Dropdown.Toggle
           split
           className="d-flex w-100 flex-column align-items-center"
         >
           <Image width="32" height="32" src={foto} roundedCircle />
-          <strong>Karyawan</strong>
+          <strong>{profile.nama_lengkap}</strong>
         </Dropdown.Toggle>
         <Dropdown.Menu className="text-center w-100">
           <LinkContainer to={APP_URLS.PROFIL}>
@@ -104,6 +60,62 @@ function Sidebar() {
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
+      <hr />
+      <Nav variant="pills" className="flex-column mb-auto">
+        <Nav.Item>
+          <p>Menu</p>
+        </Nav.Item>
+        <Nav.Item>
+          <LinkContainer to={APP_URLS.BASE}>
+            <Nav.Link>Beranda</Nav.Link>
+          </LinkContainer>
+        </Nav.Item>
+        <Nav.Item>
+          <LinkContainer to={APP_URLS.ABSENKU_URL}>
+            <Nav.Link>AbsenKu</Nav.Link>
+          </LinkContainer>
+        </Nav.Item>
+        <Nav.Item>
+          <hr />
+        </Nav.Item>
+        {profile.is_staff && (
+          <>
+            <Nav.Item>
+              <p>Menu Admin</p>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                href={APP_URLS.ADMIN_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Dashboard Administrasi
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to={APP_URLS.DATA_ABSENSI}>
+                <Nav.Link>Absensi</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to={APP_URLS.DATA_USER}>
+                <Nav.Link>Karyawan</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to={APP_URLS.DATA_DIVISI}>
+                <Nav.Link>Divisi</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+            <Nav.Item>
+              <LinkContainer to={APP_URLS.SETTING}>
+                <Nav.Link>Setting</Nav.Link>
+              </LinkContainer>
+            </Nav.Item>
+          </>
+        )}
+      </Nav>
+      <hr />
     </aside>
   );
 }

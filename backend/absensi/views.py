@@ -25,7 +25,7 @@ class ManageJamKerjaViewSet(
     """View for manage Jam Kerja."""
     serializer_class = serializers.JamKerjaSerializer
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = models.JamKerja.objects.all()
 
 
