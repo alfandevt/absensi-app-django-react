@@ -10,7 +10,7 @@ import { useEffect } from "react";
 function Sidebar() {
   const { profile } = useSelector((state) => state.user);
   let [foto, setFoto] = useState(
-    "/images/placeholder/Portrait_Placeholder.png"
+    "/static/images/placeholder/Portrait_Placeholder.png"
   );
   useEffect(() => {
     if (profile.foto) {

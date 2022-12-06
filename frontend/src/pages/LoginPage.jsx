@@ -29,7 +29,7 @@ function LoginPage() {
 
   return (
     <Container className="login-page d-flex flex-column justify-content-center align-items-center">
-      <Image src="/images/backgrounds/login_bg.jpeg" className="login-bg" />
+      <Image src="/static/images/backgrounds/login_bg.jpeg" className="login-bg" />
       <Card className="login-card p-4">
         <Card.Header>
           <Card.Title>Login Absensi Online</Card.Title>

@@ -26,7 +26,6 @@ export const convertAbsensiData = (
   jamKerja = {}
 ) => {
   let dates = getAllDaysInMonth(year, month);
-  console.log(absensiDetail);
   dates = dates.map((item) => {
     const objectData = {
       id: item.toUTCString(),
