@@ -29,17 +29,13 @@ const userInfoFromStorage = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))
   : null;
 
-const absenTodayFromStorage = localStorage.getItem("absen")
-  ? JSON.parse(localStorage.getItem("absen"))
-  : null;
-
 const initialState = {
   user: {
     profile: userInfoFromStorage,
     token: tokenFromStorage,
   },
   absensi: {
-    absen: absenTodayFromStorage,
+    absen: null,
   },
 };
 
