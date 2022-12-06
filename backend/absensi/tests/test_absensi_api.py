@@ -75,8 +75,7 @@ class PrivateAbsenApiTests(TestCase):
         """Test get absensi."""
         Absensi.objects.create(user=self.user, keterangan='M')
         url = reverse('absensi:list-absen', args=[self.user.id])
-        res = self.client.post(url, {'month': timezone.now().month})
-        print(timezone.now().month)
+        res = self.client.post(url, {'month': timezone.localtime(timezone.now()).month})
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data['results']), 1)

@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {  HashRouter, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./components/Sidebar";
 import * as APP_URLS from "./constants/urls";
@@ -25,7 +25,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div id="main" className="d-flex flex-nowrap">
         {renderSidebar()}
         <Container fluid id="main-content" className="w-100">
@@ -123,7 +123,7 @@ function App() {
           </Routes>
         </Container>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

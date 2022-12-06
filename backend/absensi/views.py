@@ -2,11 +2,9 @@
 Views for absensi.
 """
 from django.utils import timezone
-from rest_framework import generics, viewsets, mixins
+from rest_framework import  viewsets, mixins
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
-# from rest_framework.authtoken.views import ObtainAuthToken
-# from rest_framework.settings import api_settings
+from rest_framework.permissions import  IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +12,6 @@ from django.contrib.auth import get_user_model
 
 from absensi import serializers
 from core import models
-from core.paginations import CustomLimitPagination
 
 
 class ManageJamKerjaViewSet(
@@ -35,8 +32,8 @@ class ManageJamKerjaViewSet(
 def absen_karyawan(request):
     user = request.user
     data = request.data
-    current_day = timezone.now().day
-    count_absen_today = models.Absensi.objects.filter(jam__day=current_day, user=request.user, keterangan=data['keterangan']).count()
+    current_date = timezone.localtime(timezone.now()).date()
+    count_absen_today = models.Absensi.objects.filter(jam__date=current_date, user=request.user, keterangan=data['keterangan']).count()
     if count_absen_today > 0:
         return Response({'detail': _('Sudah absen')}, status=403)
 
@@ -69,7 +66,7 @@ def absen_detail_list(request, pk):
 @authentication_classes([TokenAuthentication])
 def absen_user_count_current_month(request, pk):
     user = get_user_model().objects.get(id=pk)
-    current_month = timezone.now().month
+    current_month = timezone.localtime(timezone.now()).month
     jam_kerja = models.JamKerja.objects.first()
     absen_query = models.Absensi.objects.filter(user=user, jam__month=current_month)
     absen_tepat = absen_query.filter(
@@ -89,7 +86,11 @@ def absen_user_count_current_month(request, pk):
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def check_user_absen(request):
-    current_day = timezone.now().day
-    has_absen = models.Absensi.objects.filter(jam__day=current_day, user=request.user).exists()
+    current_date = timezone.localtime(timezone.now()).date()
+
+    has_absen = models.Absensi.objects.filter(
+        jam__date=current_date,
+        user=request.user
+    ).exists()
 
     return Response({'has_absen': has_absen})
