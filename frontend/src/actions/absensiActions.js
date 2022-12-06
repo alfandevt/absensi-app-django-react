@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ABSENSI_CHECK_FAIL,
+  ABSENSI_CHECK_REQUEST,
+  ABSENSI_CHECK_SUCCESS,
   ABSENSI_COUNT_FAIL,
   ABSENSI_COUNT_SUCCESS,
   ABSENSI_CREATE_FAIL,
@@ -30,7 +33,8 @@ export const createAbsen = (formData) => async (dispatch, getState) => {
 
     const { data } = await axios.post("/api/absensi/absen/", formData, config);
     dispatch({ type: ABSENSI_CREATE_SUCCESS, payload: data });
-    localStorage.setItem("absen", JSON.stringify(data));
+    dispatch(checkUserAbsenToday());
+    dispatch(absensiCount());
   } catch (error) {
     const errorMessage = error.response.data.detail;
     dispatch({ type: ABSENSI_CREATE_FAIL, payload: error.response.status });
@@ -60,6 +64,28 @@ export const absensiCount = (formData) => async (dispatch, getState) => {
     dispatch({ type: ABSENSI_COUNT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: ABSENSI_COUNT_FAIL, payload: error.response.status });
+  }
+};
+
+export const checkUserAbsenToday = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ABSENSI_CHECK_REQUEST });
+
+    const {
+      user: { token },
+    } = getState();
+    const csrftoken = getCookie("csrftoken");
+    let config = {
+      headers: {
+        "X-CSRFToken": csrftoken,
+        Authorization: `Token ${token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/absensi/absen-check/`, config);
+    dispatch({ type: ABSENSI_CHECK_SUCCESS, payload: data.has_absen });
+  } catch (error) {
+    dispatch({ type: ABSENSI_CHECK_FAIL, payload: error.response.status });
   }
 };
 

@@ -12,9 +12,15 @@ import {
   ABSENSI_DETAIL_SUCCESS,
   ABSENSI_DETAIL_FAIL,
   ABSENSI_DETAIL_RESET,
+  ABSENSI_CHECK_REQUEST,
+  ABSENSI_CHECK_SUCCESS,
+  ABSENSI_CHECK_FAIL,
 } from "../constants/absensiConstants";
 
-export const absensiReducer = (state = { absensiDetail: [], }, action) => {
+export const absensiReducer = (
+  state = { absensiDetail: [], hasAbsen: false },
+  action
+) => {
   switch (action.type) {
     case ABSENSI_LIST_REQUEST:
       return { ...state, loading: true };
@@ -45,6 +51,14 @@ export const absensiReducer = (state = { absensiDetail: [], }, action) => {
       return { ...state, loading: false, error: action.payload };
     case ABSENSI_DETAIL_RESET:
       return { ...state, absensiDetail: [] };
+
+    case ABSENSI_CHECK_REQUEST:
+      return { ...state, loading: true };
+    case ABSENSI_CHECK_SUCCESS:
+      return { ...state, loading: false, hasAbsen: action.payload };
+    case ABSENSI_CHECK_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

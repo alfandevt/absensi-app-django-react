@@ -8,16 +8,19 @@ import DigitalClock from "../components/DigitalClock";
 import InfoCard from "../components/InfoCard";
 import DateInfo from "../components/DateInfo";
 import Spinner from "../components/Spinner/Spinner";
-import { absensiCount, createAbsen } from "../actions/absensiActions";
+import {
+  absensiCount,
+  checkUserAbsenToday,
+  createAbsen,
+} from "../actions/absensiActions";
 import { fetchTimes } from "../actions/timeActions";
-import { parseTime } from "../utilities/parseTime";
 
 function HomePage() {
   const [time] = useClock();
   const dispatch = useDispatch();
-  const [dayNow, setDayNow] = useState(new Date().getDay());
+  const [dayNow, ] = useState(new Date().getDay());
 
-  const { absen, absenCount } = useSelector((state) => state.absensi);
+  const { absen, absenCount, hasAbsen } = useSelector((state) => state.absensi);
   const { jamKerja } = useSelector((state) => state.jam);
 
   useEffect(() => {
@@ -26,15 +29,7 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    let timerId = null;
-    if (absen && jamKerja) {
-      const jamSelesaiFromDb = parseTime(jamKerja.selesai); //format hh:mm:ss
-      const waktuPulang = new Date().setHours(...jamSelesaiFromDb);
-      timerId = setTimeout(() => {
-        dispatch(createAbsen({ keterangan: "P" }));
-      }, waktuPulang - new Date());
-    }
-    return () => clearTimeout(timerId);
+    dispatch(checkUserAbsenToday());
   }, [jamKerja, absen]);
 
   const handleAbsenMasuk = () => {
@@ -46,12 +41,12 @@ function HomePage() {
   }
 
   const renderButtonAbsen = () => {
-    if (absen.absensi.keterangan === "M") {
+    if (hasAbsen) {
       return <Form.Text>Sudah Absen</Form.Text>;
     } else if (dayNow === 6 || dayNow === 0) {
       return <Form.Text>Hari Libur</Form.Text>;
     }
-    console.log(dayNow);
+
     return (
       <Button
         onClick={handleAbsenMasuk}
