@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import {  HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "./components/Sidebar";
 import * as APP_URLS from "./constants/urls";
@@ -13,6 +13,7 @@ import SettingPage from "./pages/SettingPage";
 import AbsensiPage from "./pages/AbsensiPage";
 import UserAbsensiPage from "./pages/UserAbsensiPage";
 import AbsensiDetailPage from "./pages/AbsensiDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { profile, token } = useSelector((state) => state.user);
@@ -120,6 +121,7 @@ function App() {
                 />
               }
             />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Container>
       </div>
