@@ -14,6 +14,7 @@ import AbsensiPage from "./pages/AbsensiPage";
 import UserAbsensiPage from "./pages/UserAbsensiPage";
 import AbsensiDetailPage from "./pages/AbsensiDetailPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import MobileNavbar from "./components/MobileNavbar";
 
 function App() {
   const { profile, token } = useSelector((state) => state.user);
@@ -25,9 +26,17 @@ function App() {
     return null;
   };
 
+  const renderNavbar = () => {
+    if (profile && token) {
+      return <MobileNavbar />;
+    }
+    return null;
+  };
+
   return (
     <HashRouter>
-      <div id="main" className="d-flex flex-nowrap">
+      <div id="main" className="d-flex flex-nowrap flex-column flex-lg-row">
+        {renderNavbar()}
         {renderSidebar()}
         <Container fluid id="main-content" className="w-100">
           <Routes>
